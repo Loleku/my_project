@@ -1,14 +1,24 @@
 <script setup>
 import { ref } from 'vue';
 import { my_project_backend } from 'declarations/my_project_backend/index';
-let greeting = ref('');
+let chat = ref([]);
+
+async function getChats(){
+  chat.value = await my_project_backend.get_chat();
+}
+
 
 async function handleSubmit(e) {
   e.preventDefault();
   const target = e.target;
   const chat = target.querySelector('#chat').value;
-  await my_project_backend.save_chat(chat)
+  await my_project_backend.save_chat(chat);
+  await getChats()
 }
+
+async function login(){}
+
+getChats()
 </script>
 
 <template>
@@ -21,6 +31,6 @@ async function handleSubmit(e) {
       <input id="chat" alt="chat" type="text" />
       <button type="submit">Click Me!</button>
     </form>
-    <section id="greeting">{{ greeting }}</section>
+    <section id="chat"><div v-for="msg in chat">{{ msg }}</div></section>
   </main>
 </template>
